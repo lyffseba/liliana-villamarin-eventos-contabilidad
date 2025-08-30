@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
 const eventosRoutes = require('./eventos/routes');
@@ -24,6 +25,22 @@ app.use(limiter);
 // Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// MongoDB connection
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log(`📊 MongoDB conectado: ${conn.connection.host}`);
+    return true;
+  } catch (error) {
+    console.error('❌ Error conectando a MongoDB:', error.message);
+    console.log('⚠️  El servidor continuará sin conexión a base de datos');
+    return false;
+  }
+};
 
 // Routes
 app.use('/api/eventos', eventosRoutes);
@@ -55,7 +72,8 @@ app.use('*', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+  await connectDB();
   console.log(`🚀 Servidor ejecutándose en puerto ${PORT}`);
   console.log(`📊 Sistema de Contabilidad Liliana Villamarin Eventos`);
   console.log(`🌐 Ambiente: ${process.env.NODE_ENV || 'development'}`);
