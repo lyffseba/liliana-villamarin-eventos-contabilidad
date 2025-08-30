@@ -23,7 +23,7 @@
     "business-management"
   ],
   "author": "Liliana Villamarin Eventos",
-  "license": "MIT",
+  "private": true,
   "dependencies": {
     "express": "^4.18.2",
     "mongoose": "^7.5.0",
