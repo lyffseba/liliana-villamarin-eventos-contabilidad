@@ -127,3 +127,6 @@ dist/
 # Uploads
 uploads/
 public/uploads/
+
+# AI Assistant Files
+WARP.md
